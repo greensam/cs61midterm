@@ -1,0 +1,37 @@
+GIT
+	version control system
+	track entire history and changes to a project
+	allows for seeing snapshots of state of project
+	revert changes
+	multiple people working on one project
+
+	Data model
+		repository -- the entire contents of the project, including history of all the changes to the project
+
+		commit -- snapshot of the entire proj at a specific point in time
+
+		remote -- another repository that your project knows, useful for multiple people on one project
+
+		branch -- a chain of commits associated together into one line of development
+
+
+	Workflow
+		4 environments 
+			(1) local file system 
+			(2) staging area -- changes that will be committed on next "git commit". To add changes in a file to the staging area, use git add.
+			(3) Local repository -- local history
+			(4) remote repository - history of all changes to project, possibly living on a different machine. Git push and git pull to communicate.
+
+		git status - displays list of files that you have changed
+
+		git diff or git diff FILE - view the changes in your local file system
+
+		git add FILE - adds all the changes to a file in the staging area. only changes in the staging area get committed.
+
+		git diff --staged - VIEW CHANGES IN THE STAGING AREA. shows what will actually commit
+
+		git commit -m "COMMIT MESSAGE" stores in local repository. 
+
+		git log -- view history of all changes
+			more options: 
+				(1) git log --graph --oneline --branches --decorate --all

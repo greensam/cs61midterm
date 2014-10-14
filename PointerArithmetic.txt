@@ -1,0 +1,24 @@
+CS61 Midterm Study Sheet
+
+Week 1
+	pointers and pointer arithmetic
+	memory location: address where bytes reside
+	data: bytes being pointed to
+	logical array index
+
+	Concept: use address of operator (&) to move from a[b] to &a[b]. a[b] is the data at that location, &a[b] is the address of that data.
+
+	Funky syntax thing:a[5] = *(a + 5) = *(5 + a) = 5[a]
+
+	More pointer review
+	3 kinds of comparisons: (1) data/value (2) point to same memory (3) are the same memory
+	value comparison vs address of value comparison---one can be equal without the other
+
+	CHALLENGING POINTER STUFF--DRAW PICTURES
+
+	DO SECTION PROBLEMS!
+
+	
+
+
+
