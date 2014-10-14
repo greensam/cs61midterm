@@ -1,0 +1,11 @@
+gdb.txt
+
+Useful commands
+	run
+	backtrace
+	step
+	next
+	finish -- run until the current function returns then break and print the return value.
+	examine (x) -- examine memory
+
+	
