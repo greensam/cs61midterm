@@ -1,0 +1,26 @@
+Malloc.txt
+
+Concepts: linked lists, memory alignment, memory allocation, memory coalescing
+
+How much memory should we allocate when the user requests N bytes?
+	Need to allocate additional memory for bookkeeping
+
+	Memory must also be aligned -- ensure the malloc alignment guarantee that memory returned by malloc is sufficiently aligned to hold any piece of data
+
+
+Fragmentation -- 
+	allocation overhead. Reduces mem utilization.
+
+Internal Fragmentation -- 
+	space left over in an allocated block not used for data.
+	i.e. the bytes needed to 8-byte align the next allocation
+
+External Fragmentation -- 
+	space that a particular allocation request can't use because it is broken into pieces
+	-- example: 1 MB free memory but an 8B allocation in the middle
+	-- possible to reduce external fragment, but usually this happens to allocating memory only in fixed block sizes, increasing internal fragmentation.
+
+Maximal coalescing -- reduction in fragmentation by smart freeing
+	-- when needed, actively "move" blocks 
+
+

@@ -1,1 +1,20 @@
 GarbageCollection.txt
+
+What is Garbage Collection?
+	reclaiming memory in the heap no longer being used by the program
+
+	-- generally a feature of high level languages
+
+	-- some garbage collection in native C, but they can't get all the garbage
+
+Techniques
+	Mark and Sweep -- recursively check every object's active status by pushing down the tree from globals and locals to all active heap memory, marking what is active and then free what is not.
+
+Generational Garbage Collection
+	optimization of mark and sweep
+
+	keep track of how "old" an object is-- if it's been around for a few cycles, it will likely be around for a few cycles more, so we can skip checking its status.
+
+	Divide blocks into generations, and run sweeps more frequently on younger generations.
+
+	
