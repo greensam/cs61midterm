@@ -1,0 +1,332 @@
+﻿Midterm Glossary
+
+CS61 2014
+Terms
+Abstract machine
+* The C abstract machine is a programming language. You are limited in what you can do on this machine by the features implemented in the C language even if those things are hypothetically possible on a computer in general
+* The abstract machine is more human readable it has for loops, variables and function names are identified by default as human readable addresses and not memory addresses, etc.
+* In the the abstract machine the compiler allows you to have as many local variables as you want
+Alignment
+A requirement that data types must be stored at an address that is a multiple of some number n. Most machines read in one word at a time, so aligning data ensures that one object is never split across multiple words, which would require two memory accesses.
+
+
+For example, most machines require that an int is 4-byte aligned—that is, every integer must begin at a memory address that is divisible by 4. For fundamental types, alignof(T) == sizeof(T) on most machines.
+
+
+The size of an object is always a multiple of the alignment. In structures, this often requires padding. Why? This ensures that an array of these objects, where each object begins immediately after the next, results in each object being appropriately aligned.
+
+
+Also note that alignof(struct M) == max(T1, T2, ... Tn) for each constituent type T. (Technically, it’s the least common multiple, but alignment is always a power of two, so we can use max as a shortcut.)
+
+
+Remember, since malloc doesn’t know what kind of object will be stored in the memory it returns, it always returns maximally-aligned memory (usually 8 or 16 bytes, depending on your architecture).
+Array
+A sequence of homogeneous objects, laid out contiguously in memory. Read: a bunch of objects of the same type right next to each other in memory.
+
+
+Arrays in C are laid out in memory using contiguous allocation: element n+1 is placed in memory immediately after element n.
+
+
+The sizeof operator determines an object’s size in and out of arrays. Let array be an array of objects of type T (e.g., T array[100];), and assume element 0 of the array is located at address ((uintptr_t) X). Then array element n is located at address ((uintptr_t) X) + n * sizeof(T).
+Batching
+A form of caching that seeks to minimize per-request costs by combining many small requests into fewer large requests.
+
+
+For reads, we perform the operation early—we prefetch more data than the user requested into a local cache.
+
+
+For writes, we delay the operation—we absorb writes into a local cache and flush the cache to disk only when the cache is full.
+Block
+A cacheable unit of data. Also called a cache line. Data is always transferred from memory to caches in aligned blocks.
+Buffer cache
+The operating system’s in-memory cache for the disk. Much faster than accessing hard drive for every request for data.
+Byte
+A collection of eight bits. The smallest addressable unit of memory on most modern machines. 
+
+
+Valid values for a single byte, in common bases:
+
+
+* 000000002 to 111111112
+* 0 to 255
+* 0x00 to 0xFF
+Byte order
+Whether the data for an object is stored from least to most significant byte (little endian), or most to least significant byte (big endian).
+
+
+  
+
+Caching
+Local fast storage used to speed up access to slow storage. For example, main memory is much faster to access than disk.
+
+
+Caches are best for speeding up sequential accesses.
+Cache hit
+When a request for data can be serviced by the cache.
+Cache miss
+Cold miss
+Misses resulting from an empty cache. Inevitable—a cache must be “warmed” before it is useful.
+
+
+Conflict miss
+Misses resulting from an eviction policy evicting the wrong blocks.
+
+
+Capacity miss
+Misses resulting from a cache that is too small.
+Cache thrashing
+When a block is continually loaded into a cache, evicted, then requested and reloaded into the cache. Selecting a different eviction policy or increasing cache capacity can reduce thrashing.
+Concrete machine
+* The x86 concrete machine is the actual processor
+* You are constrained to the number of registers which are available on the machine and then the remaining memory you would like to use must be stored in memory
+Declaration
+int a = 4;
+Creates an object (the region of memory assigned to hold the bytes 0x00 0x00 0x00 0x04) and a name for the object (a).
+Derived types
+Data types built out of the fundamental types. Includes:
+
+
+* Arrays
+* Pointers
+* Structures
+* Unions
+
+
+The compiler has specific rules for representing each derived type in memory based on the fundamental types in contains.
+Eviction policy
+In a multi-slot cache, the algorithm for determining what old data to expel to allow for new data to be inserted.
+
+
+Examples:
+* Least recently used
+* Least frequently used
+* First-in first-out
+* Random
+Fragmentation
+Poor utilization of storage space.
+
+
+Internal fragmentation
+Unusable memory within an allocated region. Usually caused by alignment requirements.
+
+
+External fragmentation
+Wasted memory due to lack of contiguous space. For example, there may be 700 MB of free space, but no single contiguous region of 100 MB or more.
+
+
+Efficient memory allocators will employ heuristics to maximize the size of free regions, like using different heaps for differently-sized objects.
+Fundamental types
+Building blocks of data representation. A non-exhaustive list:
+
+
+unsigned char, char, int, long, float, double
+Garbage collection
+Automatic detection and freeing of memory that is no longer in use.
+
+
+Prevents many memory errors (leaks, double frees, segfaults) by trading power and flexibility.
+
+
+Mark and sweep
+A type of garbage collector that visits every object in the heap and marks those still in use. Objects left unmarked are freed.
+Hit rate
+The number of accesses for which a cache is useful. For every request, a hit is a request that the cache can service, and a miss is a request that must query the next layer for data.
+Memory address
+A number in the range [0, 232) on 32-bit machines, or [0, 264) on 64-bit machines, representing a “mailbox” at which one byte of data can be stored.
+Memory errors
+A bug caused by invalid use of dynamic memory allocation. Usually due to programmer error.
+
+
+Examples:
+* Wild reads and wild writes
+   * Reading from or writing to an address that you didn’t intend
+   * Buffer overflows are a form of wild writes than can lead to arbitrary code execution!
+* Double frees
+   * Freeing the same object twice
+* Memory leaks
+   * Forgetting to free an object entirely
+* Invalid free
+   * Freeing an address that was never allocated
+* Dangling reference
+   * Attempting to use a pointer even after its memory has been freed
+Memory hierarchy
+  
+
+Upper layers are fast but expensive and temporary. Lower layers are cheap and durable but slow.
+
+
+By caching, we can combine the lower layers’ price and durability with the upper layers’ speed.
+Memory layout
+Each process on your computer is given an “address space.” This is a region of memory that program is allowed to access. The address space is broken into several sections. You should be familiar with all of them. Listed below are a few:
+
+
+* Stack  
+   * Stack addresses start high and progressively go lower. 
+   * Memory allocations on the stack are managed for the programmer by the compiler
+   * Heap
+   * Addresses in the heap start low and grow higher
+   * This is not guaranteed if you have a coalescing implementation of malloc. 
+   * BSS (uninitialized data)
+   * Uninitialized static variables
+   * Automatically set to zero by your operating system
+   * Globals (initialized data)
+   * Memory for global variables is stored below the heap.
+   * Text
+   * Text is the portion of the address space for a program which is allocated to hold the program instructs (i.e., the code you’ve written).
+Memory safety
+Constraints on arbitrary pointer arithmetic, casting, and freeing to prevent memory errors.
+
+
+Higher-level languages like Python and Java are considered memory-safe. C, C++, and assembly are considered memory-unsafe.
+Object
+A region of storage.
+
+
+Examples of objects in C:
+   * char
+   * unsigned int
+   * double
+
+
+Objects never overlap.
+
+
+(These are not the same as “objects” in an object-oriented programming language like Java.)
+Memory-mapped I/O
+Uses of the mmap system call to “create a space in memory that is the file.” Caching is handled automatically by the operating system.
+Operating system
+The program with full control over a machine. The most privileged component of the operating system is the kernel.
+
+
+Responsible for mediating all running processes and enforcing process isolation. Bugs in an operating system can cause your computer to crash!
+Padding
+Gaps in structures between fields to satisfy alignment requirements.
+
+
+Consider:
+
+
+struct S1 {
+    int i;
+    char c;
+    int j;
+}
+
+
+To ensure that j is 4-byte aligned, the compiler must insert three bytes of padding after c.
+
+
+  
+
+
+
+Padding may also be inserted at the end of a structure, to ensure that each element in an array of those structures would be appropriately aligned:
+
+
+struct S2 {
+    int i;
+    int j;
+    char c;
+}
+
+
+ Screen Shot 2014-10-13 at 2.07.54 AM.png 
+
+Per-call cost
+Overhead associated with each request. In the case of the write system call, this includes the cost of an interrupt, switching into kernel space, and waiting for the hard drive to spin into position.
+Per-unit cost
+Overhead associated with marginally increasing the size of a request. In the case of the write system call, this is the cost to write one more byte.
+
+
+When the per-unit cost is negligible to the compared to the per-call cost, batching can greatly improve performance.
+Process
+A program in execution on an operating system’s implementation of an abstract machine. 
+
+
+Processes can pretend they have access to the entire machine—all of memory, and all of the CPU. The OS provides these abstractions through virtual memory and time slicing, respectively.
+Process isolation
+The property that each process on a machine runs without affecting any other processes. Enforced by the operating system. Ensures that no process can crash the machine or interfere with other processes.
+Processor cache
+The L1, L2, and L3 caches. Each located successively farther from the processor.
+
+
+Each stores 64 blocks or cache lines, where each block is the same size as the entire previous level.
+
+
+For example, on a recent Intel CPU:     
+
+
+   * Registers: 8B × 16 = 128B
+   * L1: 128B × 64 = 32KB
+   * L2: 32KB × 64 = 256KB
+   * L3: 256KB × 64 = 8MB
+Processor register
+The highest-speed storage available to the CPU. Most registers are the same size as a word. Data is loaded from main memory into registers for manipulation, then written back to main memory or disk for permanent storage.
+Pointer arithmetic
+Remember that pointer arithmetic has an implicit sizeof(pointer).
+
+
+int* i = 0x100;
+i + 2; // 0x100 + 2 x sizeof(int) == 0x108
+
+
+And that pointers can behave like arrays:
+
+
+int* i;
+i[0] = 400; // valid
+
+
+Confused? Review ExerciseP.
+Profiler
+Measures how much time each part of your program takes. Empirically reveals where to optimize.
+Storage duration
+   * Static
+   * Global variable
+   * Exists for the lifetime of the program
+   * Automatic
+   * Stack variable
+   * Exists for the duration of the function
+   * Automatically allocated and deallocated by compiler
+   * Dynamic (manual)
+   * Heap variable
+   * Allocated with malloc
+   * Exists until explicitly freed
+Slot
+A location in a cache that can hold one block or cache line.
+Strided access pattern
+An access pattern where every nth chunk of bytes is requested. For example, reading a column in a square matrix of size m results in a stride-m access pattern, since the first cell in every row is m cells away from the prior cell.
+
+
+Matrix multiplication can be greatly speeded up by avoiding the strided access patterns of a naive implementation.
+System call
+An interface between a process and its operating system. In C, system calls look like normal function calls, but send explicit requests to the kernel, which can use its privileged status to perform otherwise unsafe operations, like communicating with the hard drive, networking card, or other processes.
+
+
+For example, write is a standard Unix system call that writes data to the hard disk.
+
+
+     ssize_t write(int fildes, const void *buf, size_t nbyte);
+
+
+Time slicing
+An automatic regaining of the processor by the kernel every few milliseconds. This causes some context-switching inefficiencies but ensures CPU time is shared fairly among all processes.
+Word
+Nominal size of integer and pointer data. That is, the processor’s “natural unit of data.” Most of the processor’s registers will be word-sized, and the largest addressable memory will be limited by the word size.
+
+
+Almost all modern computers have word sizes of 32 bits or 64 bits.
+References
+These terms and definitions were culled from:
+
+
+   * the course textbook, Computer Systems: A Programmer's Perspective, Second Edition,
+   * the course section notes,
+   * the course wiki,
+   * and our hard-working students’ very own lecture scribe notes.
+
+
+Happy studying!
+
+
+code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code. code is data. data is code.

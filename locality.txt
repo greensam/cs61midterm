@@ -1,0 +1,19 @@
+locality.txt
+
+Spatial locality is the idea that when one piece of data is accessed, another "nearby" piece is also likely to be accessed.
+
+Temporal locality is the idea that data that was recently accessed is likely to be accessed again e.g. access of a[0] followed by an access of a[0] sometime before a[0] is evicted from the cache. 
+
+Poor locality increases the likelihood of cache misses
+Throughput and latency should increase with better locality -- true because we are more likely to hit in the smaller faster portions of memory hierarchy.
+
+Thrashing
+	-- when the same data is repeated evicted and needed. Caused by a particularly bad access pattern, in which it is possible to always miss the cache.
+
+Striding: a stride-k access patterns accesses every k-th byte 
+	Examples of how this might happen: accessing elemtns in an array by column first, operations on a column of an image, etc.
+
+	Make sure to have the proper index order to maintain good locality.
+
+	Problem with striding: if the stride is large enough, we are almost guaranteed to miss the cache --- fully associative cache addresses this problem by storing multiple cache lines so that we can hit the cache on the next pass through. 
+	

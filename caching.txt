@@ -1,0 +1,16 @@
+caching.txt
+
+Each level is a cache for the levels below.
+
+Request Costs
+
+	N = number of requests in the series
+	U = size of each unit in N, for some definition of "unit"
+	R = per request cost
+	K = per unit cost
+	C = total cost
+
+	Then:
+
+	C = NR + NUK
+
